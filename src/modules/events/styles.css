@@ -1,0 +1,178 @@
+.toggleButtons > .v-btn__content {
+    font-size: 13px;
+    text-transform: none;
+    font-weight: 400;
+}
+
+.topSearchBar>.v-input__control {
+    display: flex;
+    flex-direction: column;
+    height: 36px;
+    flex-grow: 1;
+    flex-wrap: wrap;
+    min-width: 0;
+    width: 100%;
+}
+.topSearchBarButton.v-btn:not(.v-btn--round).v-size--default {
+    height: 36px;
+    min-width: 64px;
+    padding: 0;
+    border-top-right-radius: 0.25rem;
+}
+.topSearchBar.v-text-field.v-text-field--enclosed:not(.v-text-field--rounded) > .v-input__control > .v-input__slot, .v-text-field.v-text-field--enclosed .v-text-field__details {
+    padding: 0;
+    padding-left: 16px;
+}
+.topSearchBar.v-text-field.v-input--dense .v-input__append-inner, .v-text-field.v-input--dense .v-input__prepend-inner {
+    margin-top: 0 !important;
+}
+.topSearchBar.v-text-field--filled.v-input--dense.v-text-field--single-line > .v-input__control > .v-input__slot, .v-text-field--filled.v-input--dense.v-text-field--outlined > .v-input__control > .v-input__slot, .v-text-field--filled.v-input--dense.v-text-field--outlined.v-text-field--filled > .v-input__control > .v-input__slot, .v-text-field--full-width.v-input--dense.v-text-field--single-line > .v-input__control > .v-input__slot, .v-text-field--full-width.v-input--dense.v-text-field--outlined > .v-input__control > .v-input__slot, .v-text-field--full-width.v-input--dense.v-text-field--outlined.v-text-field--filled > .v-input__control > .v-input__slot, .v-text-field--outlined.v-input--dense.v-text-field--single-line > .v-input__control > .v-input__slot, .v-text-field--outlined.v-input--dense.v-text-field--outlined > .v-input__control > .v-input__slot, .v-text-field--outlined.v-input--dense.v-text-field--outlined.v-text-field--filled > .v-input__control > .v-input__slot {
+    min-height: 36px;
+}
+.topDate.v-card {
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+}
+.bottomDate.v-card {
+    border-top-right-radius: 0 !important;
+    border-top-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+}
+.sideDate{
+    height: 100%;
+}
+.dateText{
+    font-size: x-large;
+    font-weight: 350;
+}
+.topText{
+    font-weight: 500;
+    font-size: xx-large;
+    color: #fff;
+    line-height: 40px;
+    margin-bottom: 30px;
+    padding: 10px 25% 0px 25%;
+}
+.topItems{
+    color: white;
+    font-weight: 300;
+    backdrop-filter: blur(5px);
+    background-color: rgba(0,0,0, 0.4);
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    align-items: center;
+}
+.eventBody.v-sheet.v-card {
+    margin-top: -3.5%;
+    border-radius: 0.5rem;
+}
+#googleMap{
+	height:50vh;
+	width: 100%;
+}
+.textStyle {
+    font-size: 20px;
+    color: #374045;
+    font-weight: bold;
+    margin-bottom: 5px;
+    display: block;
+}
+.textStyle2 {
+    font-size: 15px;
+    display: inline-block;
+    text-align: left;
+    vertical-align: middle;
+    font-weight: 400;
+}
+/* .editBtn {
+    position: absolute;
+    top: 0;
+    right: 0;
+} */
+/* @media (min-width: 960px) {
+    .flex.md3.lg5-custom {
+        width: 20%;
+        max-width: 20%;
+        flex-basis: 20%;
+    }
+} */
+.pointer{
+    cursor: pointer;
+}
+.pointer:hover{
+    color:#007aff
+}
+.button{
+    background: none!important;
+    border: none;
+    padding: 0!important;
+    font-family: arial, sans-serif;
+    color: #069;
+    text-decoration: underline;
+    cursor: pointer;
+}
+.button::before{
+    background-color: transparent;
+  }
+  
+.button:hover{
+    transform: scale(1.15);
+}
+
+.search-member > .v-input__control {
+    padding-top: 0.8%;
+    margin-right: -1%;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.search-member > .v-input__control > .v-input__slot {
+    min-height: 2.5rem !important;
+}
+
+.search-member-mobile > .v-input__control {
+    padding-top: 2.9%;
+    margin-right: -3%;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.search-member-mobile > .v-input__control > .v-input__slot {
+    min-height: 2.5rem !important;
+}
+
+.search > .v-input__control > .v-input__slot::before {
+    border-style: none !important;
+  }
+  .search > .v-input__append-outer {
+    margin: 0 !important;
+  }
+  .search > .v-input__control {
+    border-top-right-radius: 0;
+  }
+  .search-btn.v-btn:not(.v-btn--round).v-size--default {
+    margin: 0 !important;
+    min-height: 2.5rem;
+  }
+  .search-btn.v-btn {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+  .v-btn-toggle.toggleBtn {
+    min-width: 100%;
+  }
+  .theme--light.v-btn-toggle:not(.v-btn-toggle--group) .v-btn.v-btn.toggl-btn-0 {
+    border-right: 1px solid !important;
+    border-color: #000000 !important;
+  }
+  .v-dialog--fullscreen.mobile {
+    top: 56px !important;
+  }
+  .v-dialog.delegate--dialog > .v-card > .top-bar {
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    background-color: #fff;
+  }

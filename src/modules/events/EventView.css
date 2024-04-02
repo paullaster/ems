@@ -1,0 +1,38 @@
+section.eventCostSection {
+    padding: .5%;
+    width: 32vw;
+}
+div.section-filters {
+display: flex;
+flex-direction: row;
+justify-content: left;
+}
+div.section-filters * {
+    display: inline-block;
+    /* width: 30%; */
+    margin: 0 .8rem 0 0;
+}
+div.section-filters > button {
+    color: #0e0e0e;
+    font-weight: 300;
+    transition: all .5s linear;
+}
+
+.table {
+     padding: 4% 0;
+     margin: 0 auto;
+     width: 100%;
+}
+td:first-child {
+    color: orange;
+}
+th {
+    color: #990F02;
+}
+th, td {
+    padding: .8rem 0;
+  }
+.activeAttendance {
+    border-bottom:.1rem solid teal;
+    font-weight: 700 !important;
+}

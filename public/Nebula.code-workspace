@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"path": "..\\..\\Nebula"
+		},
+		{
+			"path": ".."
+		},
+		{
+			"path": "../../Paygate"
+		},
+		{
+			"path": "../../Paygate-Js-Package"
+		}
+	],
+	"settings": {}
+}
