@@ -216,6 +216,21 @@ export default {
           context.commit("SET_LOADING", false, { root: true });
         });
     },
+
+    setPrimaryDelegate: (context, billTo) => {
+      context.commit("SET_LOADING", true, { root: true });
+      call("post", constants.updateBillTo, billTo)
+        .then((res) => {
+          context.commit("SET_LOADING", false, { root: true });
+          context.dispatch("getBooking", billTo.bookingNo);
+          Event.$emit("ApiSuccess", res.data.message);
+        })
+        .catch((error) => {
+          context.commit("SET_LOADING", false, { root: true });
+          Event.$emit("ApiError", error.response.data.message);
+        });
+    },
+
     saveDelegate: (context, data) => {
       context.commit("SET_VALIDATING", true);
       call("post", constants.saveDelegate, data)
@@ -242,35 +257,6 @@ export default {
         });
     },
 
-    updateDelegate: (context, data) => {
-      context.commit("SET_VALIDATING", true);
-      call("post", constants.updateDelegate, data)
-        .then((res) => {
-          context.commit("CLEAR_EVENT_DELEGATE");
-          Event.$emit("saveBooking", res.data.data);
-          context.dispatch("getBooking", res.data.data.bookingNo);
-          context.commit("SET_VALIDATING", false);
-        })
-        .catch((error) => {
-          Event.$emit("ApiError", error.response.data.message);
-          context.commit("SET_VALIDATING", false);
-        });
-    },
-
-    saveBilling: (context, billing) => {
-      context.commit("SET_LOADING", true, { root: true });
-      call("post", constants.billing, billing)
-        .then((res) => {
-          context.commit("SET_LOADING", false, { root: true });
-          context.commit("SET_CREDIT_REFERENCE_DATA", res.data.data[0]);
-          Event.$emit("billing-saved", billing.checkout);
-        })
-        .catch((error) => {
-          Event.$emit("ApiError", error.response.data.message);
-          context.commit("SET_LOADING", false, { root: true });
-        });
-    },
-
     getBooking: ({ commit }, no) => {
       commit("SET_LOADING", true, { root: true });
       call("get", constants.getBooking(no))
@@ -283,61 +269,6 @@ export default {
               }
             });
           }
-          commit("SET_LOADING", false, { root: true });
-        })
-        .catch((error) => {
-          Event.$emit("ApiError", error.response.data.message);
-          commit("SET_LOADING", false, { root: true });
-        });
-    },
-
-    getProforma: (context, no) => {
-      context.commit("SET_LOADING", true, { root: true });
-      call("get", constants.proforma(no))
-        .then((res) => {
-          context.commit("SET_PROFORMA", res.data.data[0]);
-          context.commit("SET_LOADING", false, { root: true });
-        })
-        .catch((error) => {
-          Event.$emit("ApiError", error.response.data.message);
-          context.commit("SET_LOADING", false, { root: true });
-        });
-    },
-
-    getReceipt: (context, no) => {
-      context.commit("SET_LOADING", true, { root: true });
-      call("get", constants.receipt(no))
-        .then((res) => {
-          context.commit("SET_RECEIPT", res.data.data[0]);
-          context.commit("SET_LOADING", false, { root: true });
-        })
-        .catch((error) => {
-          Event.$emit("ApiError", error.response.data.message);
-          context.commit("SET_LOADING", false, { root: true });
-        });
-    },
-
-    cancelPackage: ({ commit, dispatch }, payload) => {
-      commit("SET_LOADING", true, { root: true });
-      call("post", constants.cancelPackage, payload)
-        .then(() => {
-          dispatch("getBooking", payload.bookingNo);
-          Event.$emit("ApiSuccess", "Package Removed Successfully");
-          commit("SET_LOADING", false, { root: true });
-        })
-        .catch((error) => {
-          Event.$emit("ApiError", error.response.data.message);
-          commit("SET_LOADING", false, { root: true });
-        });
-    },
-
-    cancelDelegate: ({ commit, dispatch }, payload) => {
-      commit("SET_LOADING", true, { root: true });
-      call("post", constants.cancelDelegate, payload)
-        .then(() => {
-          commit("REMOVE_DELEGATE", payload.index);
-          dispatch("getBooking", payload.bookingNo);
-          Event.$emit("ApiSuccess", "Delegate Removed Successfully");
           commit("SET_LOADING", false, { root: true });
         })
         .catch((error) => {
@@ -359,9 +290,6 @@ export default {
           commit("SET_LOADING", false, { root: true });
         });
     },
-    setDelegateForm: ({ commit }, payload) => {
-      commit("SET_DELEGATE_FORM", payload);
-    },
     confirmPayment: ({ commit }, payload) => {
       commit("SET_LOADING", true, { root: true });
       call("post", constants.confirmPayment, payload)
@@ -375,46 +303,21 @@ export default {
           commit("SET_LOADING", false, { root: true });
         });
     },
-
-    getCreditReferenceData: ({ commit }) => {
+    createEvent({ commit }, payload) {
       commit("SET_LOADING", true, { root: true });
-      call("get", constants.creditReference)
+      call("post", constants.newEventsAPI, payload)
         .then((res) => {
-          commit("SET_CREDIT_REFERENCE", res.data.data);
+          console.assert(res);
           commit("SET_LOADING", false, { root: true });
         })
         .catch((error) => {
-          Event.$emit("ApiError", error.response.data.message);
+          console.error(error);
+          Event.$emit(
+            "ApiError",
+            "Sorry, We ran into an error creating event."
+          );
+          commit("SET_VALIDATING", false);
           commit("SET_LOADING", false, { root: true });
-        });
-    },
-
-    getMembershipCategories: ({ commit }) => {
-      commit("SET_LOADING", true, { root: true });
-      call("get", constants.membershipCategories)
-        .then((res) => {
-          commit("SET_MEMBERSHIP_CATEGORIES", res.data.data);
-          commit("SET_LOADING", false, { root: true });
-        })
-        .catch((error) => {
-          Event.$emit("ApiError", error.response.data.message);
-          commit("SET_LOADING", false, { root: true });
-        });
-    },
-    saveBillingCacheData: ({ commit }, payload) => {
-      commit("SET_BILLING_CACHE_DATA", payload);
-    },
-
-    getPreviousBookings: ({ commit }, payload) => {
-      commit("SET_LOADING", true, { root: true });
-      call("post", constants.previousBookings, payload)
-        .then((res) => {
-          commit("SET_PREVIOUS_BOOKINGS", res.data.data);
-          commit("SET_LOADING", false, { root: true });
-        })
-        .catch((error) => {
-          commit("SET_LOADING", false, { root: true });
-          Event.$emit("ApiError", error.response.data.message);
         });
     },
   },
