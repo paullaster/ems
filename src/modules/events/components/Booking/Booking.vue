@@ -50,7 +50,7 @@
                     :disabled="isUpdateDelegate"
                   >
                     <v-icon class="mx-2">mdi-plus</v-icon>
-                    {{ settings.ClickHereToAddDelegate }}
+                    add booking
                   </v-btn>
                 </div>
               </div>
@@ -161,7 +161,7 @@
               width="100%"
             >
               <v-icon class="mx-2">mdi-check</v-icon>
-              {{ settings.ProceedToCheckout }}
+              checkout
             </v-btn>
           </v-card-actions>
         </v-card>
@@ -222,10 +222,6 @@ export default {
           params: { no: to.params.no },
         });
       }
-      v.$store.dispatch("Events/getCountries");
-      v.$store.dispatch("Events/getCounties");
-      v.$store.dispatch("Events/getDisciplines");
-      v.$store.dispatch("Events/getDisclaimers");
       const bookingNo =
         v.decryptedRoute.query.bookingNo === undefined
           ? v.decryptedRoute.params.bookingNo

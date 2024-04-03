@@ -10,7 +10,7 @@
         </div>
         <h2>Bookings ongoing</h2>
         <router-link class="view white--text">
-          <span>{{ settings.BookHere }} >></span></router-link
+          <span>Book now >></span></router-link
         >
         <div class="numbers fr">
           <div class="hours tens">
