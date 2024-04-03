@@ -20,6 +20,7 @@ import confirmation from "./plugins/confirmation";
 /** import paygate package */
 import paygate from "@kinetics254/paygate";
 
+store.router = router;
 loader.boot({ router, store });
 
 //VUETELINPUT GLOBAL OPTIONS

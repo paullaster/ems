@@ -309,6 +309,8 @@ export default {
         .then((res) => {
           console.assert(res);
           commit("SET_LOADING", false, { root: true });
+          Event.$emit("ApiSuccess", res.data.message);
+          this.router?.push({ name: "EventList" });
         })
         .catch((error) => {
           console.error(error);
