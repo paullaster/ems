@@ -176,6 +176,7 @@ export default {
     proforma: (state) => state.proforma,
     receipt: (state) => state.receipt,
     event: (state) => state.event,
+    delegates: (state) => state.delegates,
     countries: (state) => state.countries,
     sponsors: (state) => state.sponsors,
     delegateForm: (state) => state.delegateForm,
@@ -231,30 +232,18 @@ export default {
         });
     },
 
-    saveDelegate: (context, data) => {
+    saveDelegate: async (context, data) => {
       context.commit("SET_VALIDATING", true);
-      call("post", constants.saveDelegate, data)
-        .then((res) => {
-          context.commit("CLEAR_EVENT_DELEGATE");
-          if (data.type === "close") {
-            context.commit("SET_LOADING", true, { root: true });
-            Event.$emit("saveBooking", res.data.data);
-          } else {
-            Event.$emit("saveBookingClear", res.data.data);
-            context.dispatch("getBooking", res.data.data.bookingNo);
-          }
-          context.dispatch("updateBookingCurrency", {
-            bookingNo: res.data.data.bookingNo,
-            eventNo: res.data.data.eventNo,
-            currencyCode: data.currencyCode,
-          });
-          Event.$emit("ApiSuccess", "successfully added delegate");
-          context.commit("SET_VALIDATING", false);
-        })
-        .catch((error) => {
-          Event.$emit("ApiError", error.response.data.message);
-          context.commit("SET_VALIDATING", false);
-        });
+
+
+      let res = await call("post", constants.delegates, data);
+
+      console.log(res);
+
+    },
+
+    getDelegates: async () => {
+      await call("get", constants.getDelegates);
     },
 
     getBooking: ({ commit }, no) => {

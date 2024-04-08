@@ -1,99 +1,47 @@
+/* eslint-disable */
 <template>
   <div>
     <v-card flat class="mx-auto">
-      <v-card-text
-        :class="`${$vuetify.breakpoint.mobile ? 'mb-10 pb-10' : ''}`"
-      >
-        <v-alert
-          v-show="errorAlert.show"
-          type="error"
-          :ref="errorAlert"
-          dismissible
-          text
-          @input="closeAlert"
-        >
+      <v-card-text :class="`${$vuetify.breakpoint.mobile ? 'mb-10 pb-10' : ''}`">
+        <v-alert v-show="errorAlert.show" type="error" :ref="errorAlert" dismissible text @input="closeAlert">
           {{ errorAlert.message }}
         </v-alert>
         <div class="mt-2">
           <v-form ref="delegateForm" id="delegateForm" v-model="isValid">
             <v-row dense>
               <!--Full Names-->
-              <v-col
-                cols="12"
-                md="3"
-                :class="$vuetify.breakpoint.mobile ? 'mt-n4' : ''"
-              >
+              <v-col cols="12" md="3" :class="$vuetify.breakpoint.mobile ? 'mt-n4' : ''">
                 <div>
-                  Enter Your Full Name<span class="mx-2" style="color: red"
-                    >*</span
-                  >
+                  Enter Your Full Name<span class="mx-2" style="color: red">*</span>
                 </div>
-                <v-text-field
-                  ref="name"
-                  :rules="delegateRules.name"
-                  v-model="delegateForm.name"
-                  placeholder="Full Name"
-                  validate-on-blur
-                  outlined
-                  dense
-                  clearable
-                >
+                <v-text-field ref="name" :rules="delegateRules.name" v-model="delegateForm.name" placeholder="Full Name"
+                  validate-on-blur outlined dense clearable>
                   <template v-slot:prepend-inner>
-                    <v-icon color="primary" class="mt-1" size="30"
-                      >person</v-icon
-                    >
+                    <v-icon color="primary" class="mt-1" size="30">person</v-icon>
                   </template>
                 </v-text-field>
               </v-col>
 
               <!--Gender-->
-              <v-col
-                cols="12"
-                md="3"
-                :class="$vuetify.breakpoint.mobile ? 'mt-n4' : ''"
-              >
+              <v-col cols="12" md="3" :class="$vuetify.breakpoint.mobile ? 'mt-n4' : ''">
                 <div>Gender<span class="mx-2" style="color: red">*</span></div>
-                <v-select
-                  placeholder="Enter Gender"
-                  v-model="delegateForm.gender"
-                  :items="['Male', 'Female', 'Other']"
-                  ref="gender"
-                  :rules="delegateRules.gender"
-                  validate-on-blur
-                  dense
-                  outlined
-                >
+                <v-select placeholder="Enter Gender" v-model="delegateForm.gender" :items="['Male', 'Female', 'Other']"
+                  ref="gender" :rules="delegateRules.gender" validate-on-blur dense outlined>
                   <template v-slot:prepend-inner>
-                    <v-icon color="primary" class="mt-1" size="30"
-                      >mdi-account</v-icon
-                    >
+                    <v-icon color="primary" class="mt-1" size="30">mdi-account</v-icon>
                   </template>
                 </v-select>
               </v-col>
 
               <!--Email-->
-              <v-col
-                cols="12"
-                md="3"
-                :class="delegateForm.delegateType === 'Member' ? 'mt-n4' : ''"
-              >
+              <v-col cols="12" md="3" :class="delegateForm.delegateType === 'Member' ? 'mt-n4' : ''">
                 <div>
                   Enter Your Email<span class="mx-2" style="color: red">*</span>
                 </div>
-                <v-text-field
-                  ref="email"
-                  :rules="delegateRules.email"
-                  v-model="delegateForm.email"
-                  placeholder="Email"
-                  validate-on-blur
-                  outlined
-                  dense
-                  clearable
-                >
+                <v-text-field ref="email" :rules="delegateRules.email" v-model="delegateForm.email" placeholder="Email"
+                  validate-on-blur outlined dense clearable>
                   <template v-slot:prepend-inner>
-                    <v-icon color="primary" class="mt-1" size="30"
-                      >email</v-icon
-                    >
+                    <v-icon color="primary" class="mt-1" size="30">email</v-icon>
                   </template>
                 </v-text-field>
               </v-col>
@@ -101,97 +49,47 @@
               <!--Phone-->
               <v-col cols="12" md="3" class="mt-n4">
                 <div>
-                  Enter Phone Number<span class="mx-2" style="color: red"
-                    >*</span
-                  >
+                  Enter Phone Number<span class="mx-2" style="color: red">*</span>
                 </div>
-                <vue-tel-input
-                  ref="phoneNo"
-                  v-model="delegateForm.phone"
-                  mode="international"
-                  required="true"
-                  :valid-characters-only="true"
-                  :input-options="inputOptions"
-                ></vue-tel-input>
+                <vue-tel-input ref="phoneNo" v-model="delegateForm.phone" mode="international" required="true"
+                  :valid-characters-only="true" :input-options="inputOptions"></vue-tel-input>
               </v-col>
               <!-- address -->
               <v-col cols="12" md="3" class="mt-n4">
                 <div>
                   Enter Address<span class="mx-2" style="color: red">*</span>
                 </div>
-                <v-text-field
-                  ref="address"
-                  :disabled="delegateForm.delegateType === ''"
-                  v-model="delegateForm.address"
-                  placeholder="Address"
-                  outlined
-                  dense
-                  clearable
-                />
+                <v-text-field ref="address" :disabled="delegateForm.delegateType === ''" v-model="delegateForm.address"
+                  placeholder="Address" outlined dense clearable />
               </v-col>
-              <v-col
-                cols="12"
-                md="6"
-                class="mt-n4"
-                v-show="isEbkNumberRequired"
-              >
-                <v-text-field
-                  :disabled="delegateForm.delegateType === ''"
-                  v-model="delegateForm.referenceNo"
-                  ref="referenceNo"
-                  placeholder="EBK Number"
-                  :rules="delegateRules.referenceNo"
-                  outlined
-                  dense
-                  clearable
-                />
+              <v-col cols="12" md="6" class="mt-n4" v-show="isEbkNumberRequired">
+                <v-text-field :disabled="delegateForm.delegateType === ''" v-model="delegateForm.referenceNo"
+                  ref="referenceNo" placeholder="EBK Number" :rules="delegateRules.referenceNo" outlined dense
+                  clearable />
               </v-col>
             </v-row>
           </v-form>
         </div>
         <div :class="`d-flex ${$vuetify.breakpoint.mobile ? 'py-3' : 'mt-5'}`">
-          <v-btn
-            elevation="0"
-            class="pa-2 mr-auto"
-            color="text-capitalize deep-orange lighten-4 deep-orange--text text--darken-4"
-            @click="closeDialog"
-            v-if="!$vuetify.breakpoint.mobile"
-          >
+          <v-btn elevation="0" class="pa-2 mr-auto"
+            color="text-capitalize deep-orange lighten-4 deep-orange--text text--darken-4" @click="closeDialog"
+            v-if="!$vuetify.breakpoint.mobile">
             <v-icon class="mx-2">mdi-close</v-icon>
-            Close</v-btn
-          >
-          <v-btn
-            color="primary"
-            outlined
-            class="white--text pa-2"
-            @click="verify('clear')"
-            >Save Delegate & Clear</v-btn
-          >
-          <v-btn
-            color="primary"
-            class="white--text pa-2 ml-2"
-            @click="verify('close')"
-            >Save Delegate & Close</v-btn
-          >
+            Close</v-btn>
+          <v-btn color="primary" outlined class="white--text pa-2" @click="verify('clear')">Save Delegate &
+            Clear</v-btn>
+          <v-btn color="primary" class="white--text pa-2 ml-2" @click="verify('close')">Save Delegate & Close</v-btn>
         </div>
       </v-card-text>
     </v-card>
     <v-overlay color="#EBF5FB" v-if="$store.getters['Events/validating']">
       <div clas="d-flex flex-column">
-        <v-progress-circular
-          indeterminate
-          size="64"
-          width="3"
-          color="primary"
-        ></v-progress-circular>
+        <v-progress-circular indeterminate size="64" width="3" color="primary"></v-progress-circular>
         <div class="mt-2 primary--text">saving ....</div>
       </div>
     </v-overlay>
-    <DelegateArrivalVue
-      :dialog="delegateArrivaldialog"
-      @settingArrivalDialog="dialogSetting"
-      @setArrivalDetails="settingArrivalDetails"
-    />
+    <DelegateArrivalVue :dialog="delegateArrivaldialog" @settingArrivalDialog="dialogSetting"
+      @setArrivalDetails="settingArrivalDetails" />
   </div>
 </template>
 <script>
@@ -351,53 +249,29 @@ export default {
     },
     resetDelegateForm: function () {
       this.delegateForm = {
-        event: "",
         email: "",
-        idNo: "",
-        memberNo: "",
-        name: "",
-        phoneNo: "",
-        address: "2345",
-        delegateContact: [],
-        bookingDelegatesPackage: this.delegateForm.bookingDelegatesPackage,
-        arrivaldetails: "",
+        name: ""
       };
       this.errorAlert = { show: false, message: "" };
     },
     saveDelegate: function (type) {
-      console.log(type);
+
+
       const delegateForm = { ...this.delegateForm };
-      const isBooking = this.isBookingView && this.booking.status === "Open";
-      delegateForm.isFirstDelegate = !isBooking;
-      
+      // const isBooking = this.isBookingView && this.booking.status === "Open";
+      // delegateForm.isFirstDelegate = !isBooking;
+
       const data = {
-        bookingDateTime: isBooking ? this.booking.bookingDateTime : new Date(),
-        eventNo: this.event.no,
-        eventDelegate: delegateForm,
+        eventID: this.$route.params.no,
         address: delegateForm.address,
-        currencyCode: delegateForm.currencyCode,
-        city: delegateForm.city,
-        county: delegateForm.county,
         email: delegateForm.email,
-        idNo: delegateForm.idNo,
-        names: delegateForm.name,
-        phoneNo: delegateForm.phoneNo, // Place member no on phone then substitute later on billing
-        referenceNo: delegateForm.memberNo, // delegateForm.memberNo, //Hack to allow Members to book untill sorted in BC
-        memberNo: delegateForm.memberNo,
-        bookingNo: this.decryptedRoute.query.bookingNo,
-        bookingType: delegateForm.delegateType,
+        name: delegateForm.name,
+        phone: delegateForm.phone, // Place member no on phone then substitute later on billing
         gender: delegateForm.gender,
-        discipline: delegateForm.discipline,
-        countryCode: delegateForm.countryCode,
-        type,
-        dateOfArrival: delegateForm.arrivaldetails,
       };
-      console.log(data);
-      if (this.$route.params.id !== undefined) {
-        this.$store.dispatch("Events/updateDelegate", data);
-      } else {
-        this.$store.dispatch("Events/saveDelegate", data);
-      }
+
+      this.$store.dispatch("Events/saveDelegate", data);
+
       setTimeout(() => {
         type === "close" ? this.closeDialog() : this.resetDelegateForm();
       }, 300);

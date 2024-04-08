@@ -33,4 +33,6 @@ export default {
   updateBookingCurrency: "events/booking/updateBookingCurrency",
   newEventsAPI: "events",
   getsingleEvent: (params) => `events/${params}`,
+  delegates: "/delegates",
+  getEventDelegates: "/event/delegates"
 };
