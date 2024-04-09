@@ -1,5 +1,6 @@
 import call from "../../service/http";
 import constants from "./constants";
+import { AuthService } from "../auth";
 
 export default {
   namespaced: true,
@@ -46,6 +47,38 @@ export default {
         .then(() => {
           commit("SET_LOADING", false, { root: true });
           dispatch("getSettings");
+        })
+        .catch((error) => {
+          Event.$emit("ApiError", error.response.data.message);
+          commit("SET_LOADING", false, { root: true });
+        });
+    },
+    login({ commit }, payload) {
+      commit("SET_LOADING", true, { root: true });
+      call("post", constants.admin_login, payload)
+        .then((res) => {
+          const user = atob(res?.data?.data?.split(".")[1])
+          AuthService.login(res.data.data, user)
+          commit("SET_LOADING", false, { root: true });
+          this.router.push({ path: "/events" });
+          window.location.reload();
+          Event.$emit("ApiSuccess", "Admin login successful!");
+        })
+        .catch((error) => {
+          Event.$emit("ApiError", error.response.data.message);
+          commit("SET_LOADING", false, { root: true });
+        });
+    },
+    createAdmin({ commit }, payload) {
+      commit("SET_LOADING", true, { root: true });
+      call("post", constants.create_admin, payload)
+        .then((res) => {
+          const user = atob(res?.data?.data?.split(".")[1])
+          AuthService.login(res.data.data, user)
+          commit("SET_LOADING", false, { root: true });
+          this.router.push({ path: "/events" });
+          window.location.reload();
+          Event.$emit("ApiSuccess", "Admin created successfully!");
         })
         .catch((error) => {
           Event.$emit("ApiError", error.response.data.message);

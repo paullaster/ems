@@ -1,70 +1,37 @@
 <template>
   <v-container>
-    <v-sheet>
-      <v-toolbar dense elevation="0">
-        <v-toolbar-title class="text-capitalize">
-          Admin Settings
-        </v-toolbar-title>
-        <v-spacer />
-      </v-toolbar>
-      <v-divider />
-    </v-sheet>
-
-    <v-card class="mt-5 px-13">
-      <v-card-title class="text-subtitle-1">
-        Event Captions <v-spacer />
+    <v-card width="40%" class="py-6 px-6">
+      <v-card-title>
+        <span class="headline">Admin Login</span>
       </v-card-title>
-      <v-divider></v-divider>
-      <!-- add key and value -->
       <v-card-text>
-        <v-row>
-          <v-col cols="12" md="5" class="d-flex justify-space-between">
+        <v-row flex>
+          <v-col cols="12">
             <v-text-field
-              v-model="newKey"
-              placeholder="New Key"
-              outlined
-              dense
+              v-model="FormData.username"
+              label="Username"
             ></v-text-field>
           </v-col>
-          <v-col cols="12" md="5" class="d-flex justify-space-between">
+          <v-col cols="12">
             <v-text-field
-              v-model="newValue"
-              placeholder="New Value"
-              outlined
-              dense
+              v-model="FormData.password"
+              label="Password"
+              type="password"
             ></v-text-field>
-            <!-- <v-btn @click="addNewTextField">New</v-btn>
-            <v-btn @click="saveChanges">Save All</v-btn> -->
           </v-col>
-          <v-col cols="12" md="2" class="d-flex justify-end">
-            <v-btn color="secondary" outlined @click="addNew">
-              <v-icon class="mr-1">mdi-plus</v-icon> new
-            </v-btn>
+          <v-col cols="12">
+            create admin<v-btn
+              @click="$router.push({ name: 'createAdmin' })"
+              text
+              color="blue"
+              >here</v-btn
+            >
+          </v-col>
+          <v-col cols="12">
+            <v-btn color="primary" @click="adminLogin"> Login </v-btn>
           </v-col>
         </v-row>
       </v-card-text>
-
-      <v-card-text class="mt-4">
-        <v-row>
-          <template v-for="(data, key, i) in formData">
-            <v-col cols="12" md="6" :key="i" class="mt-n7">
-              <v-text-field
-                :placeholder="formatKey(key)"
-                outlined
-                dense
-                :label="formatKey(key)"
-                :value="data"
-                @input="updateValue(key, $event)"
-              ></v-text-field>
-            </v-col>
-          </template>
-        </v-row>
-      </v-card-text>
-
-      <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn color="primary" @click="saveChanges">save</v-btn>
-      </v-card-actions>
     </v-card>
   </v-container>
 </template>
@@ -75,7 +42,10 @@ export default {
   name: "Admin",
   data() {
     return {
-      formData: {},
+      FormData: {
+        username: "",
+        password: "",
+      },
       newKey: "",
       newValue: "",
     };
@@ -128,6 +98,9 @@ export default {
         );
       }
     },
+    adminLogin() {
+      this.$store.dispatch("Admin/login", this.FormData);
+    }
   },
   watch: {
     settings() {

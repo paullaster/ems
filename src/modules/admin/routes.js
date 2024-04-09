@@ -13,7 +13,7 @@ export default [
         components: {
           view: Admin,
         },
-        meta: { middleware: [Auth], breadcrumb: "Dashboard" },
+        // meta: { middleware: [Auth], breadcrumb: "Dashboard" },
       },
     ],
   },

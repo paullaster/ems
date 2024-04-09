@@ -11,6 +11,7 @@ import Login from "@/modules/auth/views/Login";
 import Signup from "@/modules/auth/views/Signup";
 import BookingList from "./components/Booking/BookingList";
 import Admin from "../admin/views/Admin.vue";
+import CreateAdmin from "../admin/views/CreateAdmin.vue";
 import CreateEvent from "./views/CreateEvent.vue";
 // import AdminMiddleware from "@/router/middleware/AdminMiddleware";
 
@@ -27,10 +28,17 @@ export default [
         },
       },
       {
-        path: "admin",
+        path: "admin/login",
         name: "Admin",
         components: {
           view: Admin,
+        },
+      },
+      {
+        path: "admin/create",
+        name: "createAdmin",
+        components: {
+          view: CreateAdmin,
         },
       },
       {
@@ -120,7 +128,7 @@ export default [
           view: CreateEvent,
         },
         meta: { middleware: [Auth] },
-      }
+      },
     ],
   },
 ];

@@ -17,10 +17,10 @@
       EVENTS MANAGEMENT SYSTEM</v-toolbar-title
     >
     <v-spacer />
-    <v-btn class="primary mx-2" text v-if="check" link @click="goToBookingList"
+    <!-- <v-btn class="primary mx-2" text v-if="check" link @click="goToBookingList"
       >Click to View My Bookings</v-btn
-    >
-    <v-btn class="primary mx-2" text  link @click="goToCreateEvent"
+    > -->
+    <v-btn class="primary mx-2" text link @click="goToCreateEvent" v-if="check"
       >Create event</v-btn
     >
     <span v-if="check" class="overline mr-4 h4 white--text"
@@ -74,7 +74,7 @@ export default {
     },
     goToCreateEvent() {
       this.$router.push({ name: "CreateEvent" });
-    }
+    },
   },
 };
 </script>

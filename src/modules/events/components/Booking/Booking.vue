@@ -6,55 +6,81 @@
         <v-card class="mx-auto mb-10" flat rounded tile>
           <v-card-title v-if="!isBookingView">
             <v-icon class="mr-2" color="primary">mdi-calendar</v-icon>
-            <span class="primary--text" v-if="event.description">{{ event.description.substring(0, 100) }}
+            <span class="primary--text" v-if="event.description"
+              >{{ event.description.substring(0, 100) }}
               {{ event.description.length > 100 ? "..." : "" }}
             </span>
           </v-card-title>
-          <BookingViewTop v-if="isBookingView" :booking="booking" :cpd-event="event" />
+          <BookingViewTop
+            v-if="isBookingView"
+            :booking="booking"
+            :cpd-event="event"
+          />
           <v-responsive class="mx-auto" max-width="968px">
-            <div :class="`${$vuetify.breakpoint.mobile ? '' : 'd-flex justify-space-between'
-      }`">
+            <div
+              :class="`${
+                $vuetify.breakpoint.mobile ? '' : 'd-flex justify-space-between'
+              }`"
+            >
               <div class="text-lg-h6 ml-2">
                 {{ isBookingView ? "Booked" : "Booking" }} Delegates
               </div>
-              <div :class="`d-flex ${$vuetify.breakpoint.mobile ? 'flex-column' : ''
-      }`">
+              <div
+                :class="`d-flex ${
+                  $vuetify.breakpoint.mobile ? 'flex-column' : ''
+                }`"
+              >
                 <div class="mx-3">
-                  <v-text-field append-icon="mdi-magnify" single-line filled placeholder="Search" dense class="search"
-                    v-model="search"></v-text-field>
+                  <v-text-field
+                    append-icon="mdi-magnify"
+                    single-line
+                    filled
+                    placeholder="Search"
+                    dense
+                    class="search"
+                    v-model="search"
+                  ></v-text-field>
                 </div>
                 <div>
-                  <v-btn @click="addDelegate()" color="primary" :block="$vuetify.breakpoint.mobile"
-                    class="text-capitalize" :disabled="isUpdateDelegate">
+                  <v-btn
+                    @click="addDelegate()"
+                    color="primary"
+                    :block="$vuetify.breakpoint.mobile"
+                    class="text-capitalize"
+                    :disabled="isUpdateDelegate"
+                  >
                     <v-icon class="mx-2">mdi-plus</v-icon>
                     add booking
                   </v-btn>
                 </div>
               </div>
             </div>
-            <v-data-table v-model="primaryDelegate" :headers="headers" :items="this.updatedDelegates" light
-              calculate-widths :single-select="true" item-key="idNo" show-select class="elevation-0" :search="search"
-              :items-per-page="5">
+            <v-data-table
+              v-model="primaryDelegate"
+              :headers="headers"
+              :items="eventDelegate"
+              light
+              calculate-widths
+              :single-select="true"
+              item-key="idNo"
+              show-select
+              class="elevation-0"
+              :search="search"
+              :items-per-page="5"
+            >
               <template v-slot:item.no="{ item, index }">
                 <span class="primary--text">{{ index + 1 }}</span>
               </template>
-              <template v-slot:item.amountExclVAT="{ item }">
-                <span>{{
-      booking.currencyCode === "KES" || booking.currencyCode === ""
-        ? item.amountExclLCY
-        : item.amountExclVAT
-    }}</span>
-              </template>
-              <template v-slot:item.amountInclVAT="{ item }">
-                <span>{{
-      booking.currencyCode === "KES" || booking.currencyCode === ""
-        ? item.amountInclLCY
-        : item.amountInclVAT
-    }}</span>
-              </template>
               <template v-slot:item.data-table-select="{ item, isSelected }">
-                <v-simple-checkbox @input="setPrimaryDelegate(item)" color="primary" :value="isSelected"
-                  :disabled="isSelected || booking.status !== 'Open'"></v-simple-checkbox>
+                <v-simple-checkbox
+                  @input="setPrimaryDelegate(item)"
+                  color="primary"
+                  :value="isSelected"
+                  :disabled="isSelected || booking.status !== 'Open'"
+                ></v-simple-checkbox>
+              </template>
+              <template v-slot:item.eventCost>
+                <span>{{ booking?.balance }}</span>
               </template>
               <template v-slot:item.actions="{ item, index }">
                 <v-menu offset-y min-width="100">
@@ -64,12 +90,19 @@
                     </v-btn>
                   </template>
                   <v-list dense>
-                    <v-list-item dense v-for="(action, i) in actions" :key="i" :disabled="action.disabled || isPrimaryDelegate(item, action.text)
-      " @click="action.action(item, index)">
+                    <v-list-item
+                      dense
+                      v-for="(action, i) in actions"
+                      :key="i"
+                      :disabled="
+                        action.disabled || isPrimaryDelegate(item, action.text)
+                      "
+                      @click="action.action(item, index)"
+                    >
                       <v-list-item-icon>
                         <v-icon :color="action.iconColor" size="20">{{
-      action.icon
-    }}</v-icon>
+                          action.icon
+                        }}</v-icon>
                       </v-list-item-icon>
                       <v-list-item-title>{{ action.text }}</v-list-item-title>
                     </v-list-item>
@@ -85,18 +118,23 @@
           <v-card-title> Total Booking Amount </v-card-title>
           <v-card-text>
             <v-main class="text-right overline">
-
               Total :<strong class="font-weight-black">
-                {{ this.updatedDelegates.length == 0 ? 0 : this.updatedDelegates[0].eventCost * this.updatedDelegates.length }}
+                {{
+                  eventDelegate.length == 0
+                    ? 0
+                    : booking?.balance * eventDelegate.length
+                }}
               </strong>
             </v-main>
           </v-card-text>
           <v-card-actions>
-            <v-btn color="primary" class="text-capitalize mt-7" :disabled="(booking.status !== 'Open' &&
-      (booking.amountExclLCY === 0 ||
-        booking.amountInclLCY === 0)) ||
-      !isBookingView
-      " @click="goToBilling()" width="100%">
+            <v-btn
+              color="primary"
+              class="text-capitalize mt-7"
+              :disabled="!eventDelegate.length"
+              @click="setPaymentDialog"
+              width="100%"
+            >
               <v-icon class="mx-2">mdi-check</v-icon>
               checkout
             </v-btn>
@@ -118,7 +156,9 @@
     <v-row v-else>
       <v-col cols="12" md="9" lg="9" sm="12">
         <v-card>
-          <v-skeleton-loader type="card-heading, list-item-two-line, table"></v-skeleton-loader>
+          <v-skeleton-loader
+            type="card-heading, list-item-two-line, table"
+          ></v-skeleton-loader>
         </v-card>
       </v-col>
       <v-col cols="12" md="3" lg="3" sm="12">
@@ -151,15 +191,15 @@ export default {
       primaryDelegate: [],
       delegates: [],
       currentEvent: {},
-      updatedDelegates: [],
     };
   },
   mounted() {
-    this.getDelegates()
-    this.getEventDetails()
+    this.getDelegates();
+    this.getEventDetails();
   },
   beforeRouteEnter(to, from, next) {
     next((v) => {
+      v.$store.dispatch("Events/getBooking", v.$route.params.no);
       if (!AuthService.check() && process.env.VUE_APP_ENABLE_LOGIN === "true") {
         v.$router.push({
           name: "Login",
@@ -178,6 +218,12 @@ export default {
     });
   },
   computed: {
+    booking() {
+      return this.$store.getters["Events/booking"];
+    },
+    eventDelegate() {
+      return this.$store.getters["Events/eventDelegate"];
+    },
     headers: function () {
       return [
         {
@@ -211,7 +257,7 @@ export default {
           sortable: true,
         },
         {
-          text: "Bill To",
+          text: "Address",
           value: "address",
           align: "start",
           sortable: true,
@@ -220,7 +266,7 @@ export default {
           text: "Actions",
           value: "actions",
           align: "start",
-          sortable: true,
+          sortable: false,
         },
       ];
     },
@@ -276,13 +322,8 @@ export default {
     },
   },
   methods: {
-    goToBilling() {
-      this.$router.replace({
-        name: "billing",
-        params: {
-          bookingNo: this.$route.params.bookingNo,
-        },
-      });
+    setPaymentDialog() {
+      this.paymentdialog = true;
     },
     addDelegate() {
       this.$root.routeTo({
@@ -299,29 +340,28 @@ export default {
     },
 
     async getDelegates() {
-
       const eventID = this.$route.params.no;
-      let results = await call("post", constants.getEventDelegates, { eventID });
+      let results = await call("post", constants.getEventDelegates, {
+        eventID,
+      });
 
       this.delegates = results.data.data;
 
-      console.log({ "delegates": this.delegates })
-
+      console.log({ delegates: this.delegates });
     },
 
     async getEventDetails() {
       const eventID = this.$route.params.no;
-      let result = await call("get", `/events/${eventID}`)
+      let result = await call("get", `/events/${eventID}`);
 
-      this.currentEvent = result.data.data
+      this.currentEvent = result.data.data;
       if (this.delegates.length > 0) {
         for (const obj of this.delegates) {
           // Access and modify properties of each object
-          obj.eventCost = this.currentEvent.cost + '';
-          this.updatedDelegates.push(obj)
+          obj.eventCost = this.currentEvent.cost + "";
+          this.updatedDelegates.push(obj);
         }
       }
-      console.log(this.updatedDelegates)
     },
     viewBooking(bookingNo) {
       this.bookingView = true;
@@ -379,7 +419,6 @@ export default {
       }
     },
     maskEventDelegates: function (delegates) {
-
       console.log("hrer");
       console.log(delegates);
       console.log(this.$data);
@@ -405,7 +444,7 @@ export default {
 };
 </script>
 <style>
-.search>.v-input__control>.v-input__slot::before {
+.search > .v-input__control > .v-input__slot::before {
   border-style: none !important;
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <v-container fluid>
-    <v-card elevation="0">
+    <v-card elevation="0" class="py-6 px-6">
       <v-card-title>
         <span class="heading"></span>
       </v-card-title>

@@ -79,12 +79,7 @@
                 <v-col cols="6" md6 sm6>
                   <v-btn
                     depressed
-                    @click="
-                      $root.routeTo({
-                        name: 'booking',
-                        params: { no: event.id },
-                      })
-                    "
+                    @click="bookNow"
                     color="primary"
                     class="toggleButtons mx-2"
                     block
@@ -171,6 +166,12 @@ export default {
   },
 
   methods: {
+    bookNow() {
+      const data = {
+        event: this.event.id,
+      };
+      this.$store.dispatch("Events/saveBooking", data);
+    },
     fileMeta: function (file) {
       return {
         icon: helper.getFileIcon(file),

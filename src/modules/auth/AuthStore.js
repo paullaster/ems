@@ -28,22 +28,16 @@ export default {
         })
         .catch((error) => {
           context.commit("SET_LOADING", true, { root: false });
-          Event.$emit("ApiError", JSON.parse(error.response.data.message).message);
+          Event.$emit(
+            "ApiError",
+            JSON.parse(error.response.data.message).message
+          );
         });
     },
-
-    logout: (context, data) => {
-      call("post", constant.logout, data)
-        .then(() => {
-          AuthService.logout();
-          Event.$emit('goBack')
-        })
-        .catch((error) => {
-          context.commit("SET_LOADING", true, { root: false });
-          Event.$emit("ApiError", error.response.data.message);
-        });
+    logout() {
+      AuthService.logout();
+      Event.$emit("goBack");
     },
-
     company: (context) => {
       context.commit("SET_LOADING", true, { root: false });
       call("get", constant.company)
@@ -69,8 +63,11 @@ export default {
         })
         .catch((err) => {
           commit("SET_LOADING", false, { root: true });
-          console.log(err.response.data.message)
-          Event.$emit("ApiError", JSON.parse(err.response.data.message).message);
+          console.log(err.response.data.message);
+          Event.$emit(
+            "ApiError",
+            JSON.parse(err.response.data.message).message
+          );
         });
     },
   },

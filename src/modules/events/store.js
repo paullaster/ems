@@ -101,7 +101,7 @@ export default {
           payload;
       }
     },
-    SET_DELEGATE: (state, payload) => {
+    SET_DELEGATES: (state, payload) => {
       state.eventDelegate = payload;
     },
     UPDATE_DELEGATE: (state, payload) => {
@@ -231,33 +231,52 @@ export default {
           Event.$emit("ApiError", error.response.data.message);
         });
     },
-
-    saveDelegate: async (context, data) => {
-      context.commit("SET_VALIDATING", true);
-
-
-      let res = await call("post", constants.delegates, data);
-
-      console.log(res);
-
+    saveBooking({ commit }, payload) {
+      commit("SET_LOADING", true, { root: true });
+      call("post", constants.booking, payload)
+        .then((res) => {
+          commit("SET_LOADING", false, { root: true });
+          // dispatch("saveDelegate", { ...args, booking: res.data.data.id });
+          this.router.push({
+            name: "booking",
+            params: { no: res.data.data.id },
+          });
+        })
+        .catch((error) => {
+          commit("SET_LOADING", false, { root: true });
+          Event.$emit("ApiError", error.response.data.message);
+        });
+    },
+    saveDelegate(context, data) {
+      context.commit("SET_LOADING", true, { root: true });
+      call("post", constants.delegate, data)
+        .then((res) => {
+          context.commit("SET_LOADING", false, { root: true });
+          context.dispatch("getBooking", res.data.data.booking);
+          Event.$emit("ApiSuccess", res.data.message);
+        })
+        .catch((error) => {
+          context.commit("SET_LOADING", false, { root: true });
+          Event.$emit("ApiError", error.response.data.message);
+        });
     },
 
-    getDelegates: async () => {
-      await call("get", constants.getDelegates);
+    getBookingDelegates(context, params) {
+      call("get", constants.getBookingDelegates(params))
+        .then((res) => {
+          context.commit("SET_DELEGATES", res.data.data);
+        })
+        .catch((error) => {
+          Event.$emit("ApiError", error.response.data.message);
+        });
     },
 
-    getBooking: ({ commit }, no) => {
+    getBooking: ({ commit, dispatch }, no) => {
       commit("SET_LOADING", true, { root: true });
       call("get", constants.getBooking(no))
         .then((res) => {
-          if (res.data.data[0]) {
-            commit("SET_BOOKING", res.data.data[0]);
-            res.data.data[0].eventDelegate.map((d) => {
-              if (d.status !== "Cancelled") {
-                commit("ADD_DELEGATE", d);
-              }
-            });
-          }
+          commit("SET_BOOKING", res.data.data);
+          dispatch("getBookingDelegates", res.data.data.id);
           commit("SET_LOADING", false, { root: true });
         })
         .catch((error) => {
@@ -299,7 +318,7 @@ export default {
           console.assert(res);
           commit("SET_LOADING", false, { root: true });
           Event.$emit("ApiSuccess", res.data.message);
-          this.router?.push({ name: "EventList" });
+          this.router?.push({ path: "/events" });
         })
         .catch((error) => {
           console.error(error);
