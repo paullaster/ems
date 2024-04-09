@@ -46,6 +46,7 @@ export default {
     membershipCategories: [],
     billingCacheData: {},
     previousBookings: [],
+    paymentDialog: false,
   },
   mutations: {
     SET_EVENTS: (state, payload) => {
@@ -160,6 +161,9 @@ export default {
     SET_PREVIOUS_BOOKINGS: (state, payload) => {
       state.previousBookings = payload;
     },
+    SET_PAYMENT_DIALOG: (state, payload) => {
+      state.paymentDialog = payload;
+    }
   },
   getters: {
     events: (state) => state.events,
@@ -190,6 +194,7 @@ export default {
     billingCacheData: (state) => state.billingCacheData,
     previousBookings: (state) => state.previousBookings,
     childEvent: (state) => state.childEvent,
+    paymentDialog: (state) => state.paymentDialog,
   },
   actions: {
     getEvents: (context) => {
@@ -277,6 +282,7 @@ export default {
         .then((res) => {
           commit("SET_BOOKING", res.data.data);
           dispatch("getBookingDelegates", res.data.data.id);
+          dispatch("getEvent", res.data.data.event);
           commit("SET_LOADING", false, { root: true });
         })
         .catch((error) => {
@@ -330,5 +336,18 @@ export default {
           commit("SET_LOADING", false, { root: true });
         });
     },
+    pay({ commit, dispatch }, payload) {
+      commit("SET_LOADING", true, { root: true });
+      call("post", constants.pay, payload)
+        .then((res) => {
+          commit("SET_LOADING", false, { root: true });
+          dispatch("getBooking", payload.bookingNo);
+          Event.$emit("ApiSuccess", res.data.message);
+        })
+        .catch((error) => {
+          commit("SET_LOADING", false, { root: true });
+          Event.$emit("ApiError", error.response.data.message);
+        });
+    }
   },
 };

@@ -7,8 +7,8 @@
           <v-card-title v-if="!isBookingView">
             <v-icon class="mr-2" color="primary">mdi-calendar</v-icon>
             <span class="primary--text" v-if="event.description"
-              >{{ event.description.substring(0, 100) }}
-              {{ event.description.length > 100 ? "..." : "" }}
+              >{{ event?.description?.substring(0, 100) }}
+              {{ event?.description?.length > 100 ? "..." : "" }}
             </span>
           </v-card-title>
           <BookingViewTop
@@ -168,20 +168,21 @@
       </v-col>
     </v-row>
     <v-card-actions class="mb-10"></v-card-actions>
+
+    <PaymentDialog />
   </v-container>
 </template>
 <script>
 import BookingViewTop from "./BookingViewTop";
 import bookingMixin from "./bookingMixin";
-import AuthService from "@/modules/auth/AuthService";
-import call from "../../../../service/http";
-import constants from "../../constants";
+import PaymentDialog from "./PaymentDialog.vue";
 
 export default {
   name: "Booking",
   mixins: [bookingMixin],
   components: {
     BookingViewTop,
+    PaymentDialog,
   },
   data() {
     return {
@@ -193,28 +194,9 @@ export default {
       currentEvent: {},
     };
   },
-  mounted() {
-    this.getDelegates();
-    this.getEventDetails();
-  },
   beforeRouteEnter(to, from, next) {
     next((v) => {
       v.$store.dispatch("Events/getBooking", v.$route.params.no);
-      if (!AuthService.check() && process.env.VUE_APP_ENABLE_LOGIN === "true") {
-        v.$router.push({
-          name: "Login",
-          params: { no: to.params.no },
-        });
-      }
-      const bookingNo =
-        v.decryptedRoute.query.bookingNo === undefined
-          ? v.decryptedRoute.params.bookingNo
-          : v.decryptedRoute.query.bookingNo;
-      if (bookingNo !== undefined) {
-        v.viewBooking(bookingNo);
-      } else {
-        v.$store.dispatch("Events/getEvent", v.decryptedRoute.params.no);
-      }
     });
   },
   computed: {
@@ -316,14 +298,11 @@ export default {
         this.decryptedRoute.query.bookingNo !== undefined
       );
     },
-
-    settings() {
-      return JSON.parse(window.localStorage.getItem("aquila_captions"));
-    },
   },
   methods: {
     setPaymentDialog() {
-      this.paymentdialog = true;
+      this.$store.dispatch("Events/getBooking", this.$route.params.no);
+      this.$store.commit("Events/SET_PAYMENT_DIALOG", true);
     },
     addDelegate() {
       this.$root.routeTo({
@@ -331,37 +310,7 @@ export default {
         params: {
           no: this.event.id,
         },
-        query: {
-          bookingNo: this.booking.bookingNo
-            ? this.booking.bookingNo
-            : undefined,
-        },
       });
-    },
-
-    async getDelegates() {
-      const eventID = this.$route.params.no;
-      let results = await call("post", constants.getEventDelegates, {
-        eventID,
-      });
-
-      this.delegates = results.data.data;
-
-      console.log({ delegates: this.delegates });
-    },
-
-    async getEventDetails() {
-      const eventID = this.$route.params.no;
-      let result = await call("get", `/events/${eventID}`);
-
-      this.currentEvent = result.data.data;
-      if (this.delegates.length > 0) {
-        for (const obj of this.delegates) {
-          // Access and modify properties of each object
-          obj.eventCost = this.currentEvent.cost + "";
-          this.updatedDelegates.push(obj);
-        }
-      }
     },
     viewBooking(bookingNo) {
       this.bookingView = true;
@@ -429,16 +378,6 @@ export default {
       //     idNo: this.maskString(d.idNo),
       //   };
       // });
-    },
-  },
-  watch: {
-    booking: function (val) {
-      if (val) {
-        this.primaryDelegate = val.eventDelegate.filter(
-          (d) => d.idNo === val.idNo
-        );
-        this.$store.dispatch("Events/getEvent", val.eventNo);
-      }
     },
   },
 };

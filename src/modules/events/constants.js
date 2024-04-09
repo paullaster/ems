@@ -35,4 +35,5 @@ export default {
   getBookingDelegates: (params) => `delegates/${params}`,
   getBooking: (params) => `bookings/${params}`,
   delegate: "delegates",
+  pay: "pay",
 };

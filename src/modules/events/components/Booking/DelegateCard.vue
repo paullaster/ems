@@ -23,8 +23,8 @@
           class="headline pa-2 text-truncate"
           :style="`width: ${$vuetify.breakpoint.mobile ? '85%' : '60%'}`"
         >
-          {{ event.description }} on {{ event.startDate }} at
-          {{ event.location }}
+          {{ event.description }} on {{ formatDate(event.startDate, 8) }} at
+          {{ event.venue }}
         </div>
         <div :class="`pa-2 ${$vuetify.breakpoint.mobile ? '' : 'ml-auto'}`">
           <v-chip
@@ -65,10 +65,11 @@
 <script>
 import bookingMixin from "./bookingMixin";
 import DelegateDetails from "./DelegateDetails.vue";
+import eventMixin from "../../eventMixin";
 // import SelectBilling from "./SelectBilling.vue";
 export default {
   name: "DelegateCard",
-  mixins: [bookingMixin],
+  mixins: [bookingMixin, eventMixin],
   components: {
     DelegateDetails,
     // SelectBilling,
